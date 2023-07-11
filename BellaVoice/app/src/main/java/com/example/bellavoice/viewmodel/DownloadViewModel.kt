@@ -8,13 +8,9 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCompositionContext
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import com.example.bellavoice.model.UrlResult
 import com.example.bellavoice.service.UrlService
-import java.io.File
 
 class DownloadViewModel {
     var loading by mutableStateOf(false)
@@ -53,7 +49,7 @@ class DownloadViewModel {
         val request = DownloadManager.Request(uri)
         request.setDestinationInExternalPublicDir(
             Environment.DIRECTORY_MUSIC,
-            "/test/" + System.currentTimeMillis() + extension
+            "/SongsManager/" + result.data!!.video_title + extension
         )
 
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
@@ -66,7 +62,7 @@ class DownloadViewModel {
             )
         Toast.makeText(baseActivity, "start Downloading..", Toast.LENGTH_SHORT).show()
 
-        downloadReference = dm?.enqueue(request) ?: 0
+        downloadReference = dm.enqueue(request)
 
 //        loading = false
         return downloadReference
