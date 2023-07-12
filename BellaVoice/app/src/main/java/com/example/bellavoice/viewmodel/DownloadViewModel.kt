@@ -11,6 +11,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.example.bellavoice.model.UrlResult
 import com.example.bellavoice.service.UrlService
+import java.io.File
 
 class DownloadViewModel {
     var loading by mutableStateOf(false)
@@ -37,7 +38,7 @@ class DownloadViewModel {
     }
 
     fun downloadPdf(baseActivity: Context): Long {
-        if(result.data == null)
+        if (result.data == null)
             return 0
 //        val extension = url?.substring(url.lastIndexOf("."))
         val extension = ".mp3"
@@ -47,9 +48,10 @@ class DownloadViewModel {
             baseActivity.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         val uri = Uri.parse(result.data!!.url)
         val request = DownloadManager.Request(uri)
+        val filename = result.data!!.video_title.replace("/", " ")
         request.setDestinationInExternalPublicDir(
             Environment.DIRECTORY_MUSIC,
-            "/SongsManager/" + result.data!!.video_title + extension
+            "/SongsManager/$filename$extension"
         )
 
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
