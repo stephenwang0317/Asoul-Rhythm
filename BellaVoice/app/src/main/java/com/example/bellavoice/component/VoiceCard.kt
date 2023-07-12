@@ -1,5 +1,6 @@
 package com.example.bellavoice.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
@@ -10,20 +11,25 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.bellavoice.model.SongBean
+import com.example.bellavoice.viewmodel.SongsViewModel
 
-@Preview(showBackground = true)
+
 @Composable
 fun VoiceCard(
     modifier: Modifier = Modifier,
-    num: Int = 0
+    bean: SongBean,
+    vm: SongsViewModel
 ) {
     Card(
-        modifier = modifier.defaultMinSize(
-            minHeight = 100.dp
-        )
+        modifier = modifier
+            .defaultMinSize(
+                minHeight = 100.dp
+            )
+            .clickable { vm.playMusic(bean) }
     ) {
         Text(
-            text = "Title Title Title",
+            text = bean.song,
             fontSize = 20.sp,
             modifier = Modifier.padding(
                 top = 5.dp,
