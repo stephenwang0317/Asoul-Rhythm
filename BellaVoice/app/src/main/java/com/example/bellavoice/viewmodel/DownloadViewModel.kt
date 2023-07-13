@@ -11,13 +11,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.example.bellavoice.model.UrlResult
 import com.example.bellavoice.service.UrlService
-import java.io.File
 
 class DownloadViewModel {
     var loading by mutableStateOf(false)
         private set
 
-    var text by mutableStateOf("")
+    var bv by mutableStateOf("")
+    var fileName by mutableStateOf("")
 
     var result by mutableStateOf(UrlResult())
 
@@ -26,13 +26,14 @@ class DownloadViewModel {
     suspend fun getUrl() {
         loading = true
 
-        val tmp = urlService.getUrl(text)
+        val tmp = urlService.getUrl(bv)
 
         Log.i(
             "=====================",
             tmp.toString()
         )
         result = tmp
+        fileName = result.data!!.video_title.replace("/", " ")
 
         loading = false
     }
@@ -48,10 +49,9 @@ class DownloadViewModel {
             baseActivity.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         val uri = Uri.parse(result.data!!.url)
         val request = DownloadManager.Request(uri)
-        val filename = result.data!!.video_title.replace("/", " ")
         request.setDestinationInExternalPublicDir(
             Environment.DIRECTORY_MUSIC,
-            "/SongsManager/$filename$extension"
+            "/SongsManager/$fileName$extension"
         )
 
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
