@@ -3,17 +3,18 @@ package com.example.bellavoice.viewmodel
 import android.annotation.SuppressLint
 import android.media.MediaPlayer
 import android.os.Environment
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.example.bellavoice.model.SongBean
 import java.io.File
 
-class SongsViewModel {
+class SongsViewModel() : ViewModel() {
     private var mData: MutableList<SongBean> = ArrayList()
     private val _targetSong = MutableLiveData<MutableList<SongBean>>()
+    private var _currentSongId = -1
 
     var isPlaying by mutableStateOf(false)
         private set
@@ -37,17 +38,15 @@ class SongsViewModel {
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).absolutePath
         path = path + File.separator + "SongsManager"
         val baseFile = File(path)
-
+        var id = 0
         if (baseFile.isDirectory) {
-            baseFile.list()
-
-            Log.i("=========", "yes")
             for (file in baseFile.listFiles()!!) {
-                Log.i("fileName:", file.name)
                 val item = SongBean(
                     song = file.name,
-                    path = file.path
+                    path = file.path,
+                    id = id
                 )
+                id++
                 mData.add(item)
             }
         }
@@ -55,11 +54,16 @@ class SongsViewModel {
 
     fun playMusic(bean: SongBean) {
         mediaPlayer.apply {
+            stop()
             reset()
             setDataSource(bean.path)
+            setOnCompletionListener {
+                nextSong()
+            }
             prepare()
             start()
         }
+        _currentSongId = bean.id
         isPlaying = true
     }
 
@@ -69,11 +73,41 @@ class SongsViewModel {
     }
 
     fun resumePlay() {
-        mediaPlayer.start()
-        isPlaying = true
+        if (_currentSongId == -1) {
+
+        } else {
+            mediaPlayer.start()
+            isPlaying = true
+        }
     }
+
+    fun nextSong() {
+        mediaPlayer.stop()
+        var next = _currentSongId + 1
+        if (next == mData.size) {
+            next = 0
+        }
+        playMusic(mData[_currentSongId + 1])
+        _currentSongId = next
+    }
+
+    fun previousSong() {
+        mediaPlayer.stop()
+        var prev = _currentSongId - 1
+        if (prev == -1) {
+            prev = mData.size -1
+        }
+        playMusic(mData[prev])
+        _currentSongId = prev
+    }
+
     init {
         loadLocalSongs()
         searchSong()
+    }
+
+    override fun onCleared() {
+        mediaPlayer.release()
+        super.onCleared()
     }
 }
