@@ -117,7 +117,7 @@ fun MainPage(
             LazyColumn(
                 contentPadding = it,
                 content = {
-                    item { Spacer(modifier = Modifier.height(10.dp)) }
+                    item { Spacer(modifier = Modifier.height(5.dp)) }
                     items(targetSong) {
                         VoiceCard(
                             modifier = Modifier.fillMaxWidth(),
@@ -125,6 +125,7 @@ fun MainPage(
                             vm = songVM
                         )
                     }
+                    item { Spacer(modifier = Modifier.height(80.dp)) }
                 },
                 verticalArrangement = Arrangement.spacedBy(10.dp),
                 modifier = modifier
@@ -135,6 +136,6 @@ fun MainPage(
                     .weight(1f)
             )
         }
-        BoxWithBottomBar()
+        BoxWithBottomBar(songVM)
     }
 }
