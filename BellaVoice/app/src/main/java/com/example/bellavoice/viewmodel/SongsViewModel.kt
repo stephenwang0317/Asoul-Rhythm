@@ -87,7 +87,7 @@ class SongsViewModel() : ViewModel() {
         if (next == mData.size) {
             next = 0
         }
-        playMusic(mData[_currentSongId + 1])
+        playMusic(mData[next])
         _currentSongId = next
     }
 
