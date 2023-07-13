@@ -1,25 +1,21 @@
 package com.example.bellavoice.viewmodel
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.database.Cursor
 import android.media.MediaPlayer
 import android.os.Environment
-import android.provider.MediaStore
 import android.util.Log
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
 import com.example.bellavoice.model.SongBean
-import kotlinx.coroutines.launch
 import java.io.File
-import java.text.SimpleDateFormat
 
 class SongsViewModel {
     private var mData: MutableList<SongBean> = ArrayList()
     private val _targetSong = MutableLiveData<MutableList<SongBean>>()
 
-    var isPlaying = false
+    var isPlaying by mutableStateOf(false)
         private set
     val targetSong: MutableLiveData<MutableList<SongBean>>
         get() = _targetSong
@@ -48,7 +44,7 @@ class SongsViewModel {
             Log.i("=========", "yes")
             for (file in baseFile.listFiles()!!) {
                 Log.i("fileName:", file.name)
-                var item = SongBean(
+                val item = SongBean(
                     song = file.name,
                     path = file.path
                 )
