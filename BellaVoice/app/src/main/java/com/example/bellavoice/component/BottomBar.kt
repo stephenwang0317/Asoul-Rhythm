@@ -2,6 +2,7 @@ package com.example.bellavoice.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.runtime.Composable
@@ -25,12 +27,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.bellavoice.viewmodel.SongsViewModel
 
 @Composable
 fun BottomBar(
-//    vm: SongsViewModel = SongsViewModel()
+    vm: SongsViewModel
 ) {
 
     Box(
@@ -55,29 +57,24 @@ fun BottomBar(
             horizontalArrangement = Arrangement.spacedBy(10.dp) //设置子项的间距
         ) {
             Spacer(modifier = Modifier.weight(1f))
-
-            /*
-            Image(
-//                imageVector = if (vm.isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
-                imageVector = Icons.Default.Pause,
-                contentDescription = null,
-                modifier = Modifier
-                    .padding(5.dp)
-                    .size(40.dp)
-//                    .clickable {
-//                        if (vm.isPlaying) vm.stopPlay()
-//                        else vm.resumePlay()
-//                    }
-            )*/
-            BottomIcon(imageVector = Icons.Default.SkipPrevious)
-            BottomIcon(imageVector = Icons.Default.Pause)
-            BottomIcon(imageVector = Icons.Default.SkipNext)
+            BottomIcon(imageVector = Icons.Default.SkipPrevious) {
+                vm.previousSong()
+            }
+            BottomIcon(imageVector = if (vm.isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow) {
+                if (vm.isPlaying) vm.stopPlay()
+                else vm.resumePlay()
+            }
+            BottomIcon(imageVector = Icons.Default.SkipNext) {
+                vm.nextSong()
+            }
         }
     }
 }
 
 @Composable
-fun BoxWithBottomBar() {
+fun BoxWithBottomBar(
+    vm: SongsViewModel
+) {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -88,13 +85,14 @@ fun BoxWithBottomBar() {
         ) {
 
         }
-        BottomBar()
+        BottomBar(vm)
     }
 }
 
 @Composable
 fun BottomIcon(
-    imageVector: ImageVector
+    imageVector: ImageVector,
+    onClickAction: () -> Unit = {}
 ) {
     Image(
         imageVector = imageVector,
@@ -102,17 +100,7 @@ fun BottomIcon(
         modifier = Modifier
             .size(40.dp)
             .padding(5.dp)
+            .clickable { onClickAction() }
     )
 }
 
-@Composable
-@Preview(showBackground = true)
-fun PrevFun() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Blue)
-    ) {
-        BoxWithBottomBar()
-    }
-}
