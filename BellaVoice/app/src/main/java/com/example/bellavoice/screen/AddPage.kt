@@ -126,7 +126,7 @@ fun AddPage(
             MyText(title = "code", msg = downloadVM.result.status.toString())
             SingleLine(
                 title = "url",
-                msg = downloadVM.result.data.urls.getOrNull(0)?.url ?: "",
+                msg = downloadVM.result.data?.urls?.getOrNull(0)?.url ?: "",
                 readable = true
             )
             SingleLine(title = "标题", msg = downloadVM.fileName) {

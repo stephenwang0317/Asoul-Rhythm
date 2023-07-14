@@ -39,8 +39,8 @@ class DownloadViewModel {
             tmp.toString()
         )
         result = tmp
-        fileName = result.data!!.video_title.replace("/", " ")
-
+        if(result.data != null)
+            fileName = result.data!!.video_title.replace("/", " ")
         loading = false
     }
 
