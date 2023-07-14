@@ -9,32 +9,55 @@ headers = {
 }
 
 
-def get_src_url(bv):
-    url = "https://www.bilibili.com/video/" + bv
+def get_src_url(bv, part):
+    if part is None:
+        url = "https://www.bilibili.com/video/" + bv + "?p=1"
+    else:
+        url = "https://www.bilibili.com/video/" + bv + "?p=" + str(part)
+
+    print("url: " + url)
     text = requests.get(url=url, headers=headers)
+    # print(text.text)
     soup = bs(text.text, 'lxml')
     scripts = soup.find_all("script")
-    try:
-        video_title = soup.find_all("h1", attrs={"class": "video-title"})[0]
-    except IndexError:
-        video_title = ""
+
+    video_title = soup.title.string
+    video_title = video_title.rstrip("_哔哩哔哩_bilibili")
 
     src_json = None
 
     for script in scripts:
-        # print("====================")
+
         script_text = str(script.string)
         if script_text.startswith("window.__playinfo__="):
             src_json = json.loads(script_text.lstrip("window.__playinfo__="))
         # print(script_text)
-        print(src_json)
         if src_json is not None:
+            # print(src_json)
             break
     try:
-        return {"url": src_json["data"]["dash"]["audio"][0]["baseUrl"], "video-title": video_title.string}
+        ret = []
+        for audio in src_json["data"]["dash"]["audio"]:
+            ret.append(
+                {"url": audio["baseUrl"], "bandwidth": audio["bandwidth"]}
+            )
+        ret.sort(key=sort_key)
+        ret2 = []
+        for index, audio in enumerate(ret):
+            ret2.append(
+                {"url": audio["url"], "quality": index}
+            )
+        return {
+            "video_title": video_title,
+            "urls": ret2
+        }
     except TypeError:
         return None
 
 
+def sort_key(item):
+    return item["bandwidth"]
+
+
 if __name__ == "__main__":
-    print(get_src_url("BV1kP411K7RV?p=108"))
+    print(get_src_url("BV1kP411K7RV", 2))

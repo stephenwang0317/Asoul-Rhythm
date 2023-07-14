@@ -1,5 +1,5 @@
 from flask import Flask
-
+from flask import request
 from BaseResponse import BaseResponse
 from utils import get_src_url
 import json
@@ -9,7 +9,9 @@ app = Flask(__name__)
 
 @app.route("/<bv>")
 def get_url(bv):
-    ans = get_src_url(bv=bv)
+    # print(bv)
+    part = request.args.get('p')
+    ans = get_src_url(bv=bv, part=part)
     if bv != "" and ans is not None:
         br = BaseResponse.success(data=ans)
         return json.dumps(br.jsonformat(), ensure_ascii=False)
