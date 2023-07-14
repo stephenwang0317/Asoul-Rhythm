@@ -17,6 +17,7 @@ class DownloadViewModel {
         private set
 
     var bv by mutableStateOf("")
+    var part by mutableStateOf("")
     var fileName by mutableStateOf("")
 
     var result by mutableStateOf(UrlResult())
@@ -25,8 +26,13 @@ class DownloadViewModel {
 
     suspend fun getUrl() {
         loading = true
-
-        val tmp = urlService.getUrl(bv)
+        var tmpPart = 1
+        tmpPart = try {
+            part.toInt()
+        } catch (e: NumberFormatException) {
+            1
+        }
+        val tmp = urlService.getUrl(bv, tmpPart)
 
         Log.i(
             "=====================",
@@ -38,7 +44,7 @@ class DownloadViewModel {
         loading = false
     }
 
-    fun downloadPdf(baseActivity: Context): Long {
+    fun downloadPdf(baseActivity: Context, quality: Int = 0): Long {
         if (result.data == null)
             return 0
 //        val extension = url?.substring(url.lastIndexOf("."))
@@ -47,7 +53,7 @@ class DownloadViewModel {
         val downloadReference: Long
         val dm: DownloadManager =
             baseActivity.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-        val uri = Uri.parse(result.data!!.url)
+        val uri = Uri.parse(result.data!!.urls[quality].url)
         val request = DownloadManager.Request(uri)
         request.setDestinationInExternalPublicDir(
             Environment.DIRECTORY_MUSIC,

@@ -1,10 +1,10 @@
 package com.example.bellavoice.service
 
-import com.example.bellavoice.model.DataInfo
 import com.example.bellavoice.model.UrlResult
 import com.example.homework.network.Network
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface UrlService {
 
@@ -16,6 +16,7 @@ interface UrlService {
 
     @GET("{bv}")
     suspend fun getUrl(
-        @Path("bv") bv: String
+        @Path("bv") bv: String,
+        @Query("p") p: Int = 1
     ): UrlResult
 }

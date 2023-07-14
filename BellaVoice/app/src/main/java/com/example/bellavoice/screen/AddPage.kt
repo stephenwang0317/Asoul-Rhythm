@@ -72,16 +72,33 @@ fun AddPage(
             fontSize = 26.sp,
             fontFamily = FontFamily.SansSerif,
         )
-        OutlinedTextField(
-            modifier = Modifier.padding(top = 10.dp),
-            value = downloadVM.bv,
-            onValueChange = { downloadVM.bv = it },
-            singleLine = true,
-            label = { Text(text = "BV号") },
-            textStyle = TextStyle(
-                fontSize = 24.sp,
+        Row(modifier = Modifier.fillMaxWidth()) {
+            OutlinedTextField(
+                modifier = Modifier
+                    .padding(top = 10.dp, end = 5.dp)
+                    .weight(0.7f),
+                value = downloadVM.bv,
+                onValueChange = { downloadVM.bv = it },
+                singleLine = true,
+                label = { Text(text = "BV号") },
+                textStyle = TextStyle(
+                    fontSize = 24.sp,
+                )
             )
-        )
+            OutlinedTextField(
+                modifier = Modifier
+                    .padding(top = 10.dp, start = 5.dp)
+                    .weight(0.2f),
+                value = downloadVM.part,
+                onValueChange = { downloadVM.part = it },
+                singleLine = true,
+                label = { Text(text = "分p") },
+                textStyle = TextStyle(
+                    fontSize = 24.sp,
+                )
+            )
+        }
+
 
         Button(
             onClick = {
@@ -107,8 +124,12 @@ fun AddPage(
             MyText(title = "时间", msg = timeStamp2DateStr(downloadVM.result.timestamp))
             MyText(title = "信息", msg = downloadVM.result.message)
             MyText(title = "code", msg = downloadVM.result.status.toString())
-            SingleLine(title = "url", msg = downloadVM.result.data?.url ?: "", readable = true)
-            SingleLine(title = "标题", msg = downloadVM.fileName){
+            SingleLine(
+                title = "url",
+                msg = downloadVM.result.data.urls.getOrNull(0)?.url ?: "",
+                readable = true
+            )
+            SingleLine(title = "标题", msg = downloadVM.fileName) {
                 downloadVM.fileName = it
             }
         }

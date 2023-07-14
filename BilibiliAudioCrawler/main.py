@@ -7,9 +7,9 @@ import json
 app = Flask(__name__)
 
 
-@app.route("/<bv>")
+@app.route("/<bv>", methods=['GET'])
 def get_url(bv):
-    # print(bv)
+    print(bv)
     part = request.args.get('p')
     ans = get_src_url(bv=bv, part=part)
     if bv != "" and ans is not None:
