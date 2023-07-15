@@ -1,4 +1,4 @@
-package com.example.bellavoice.theme.bella
+package com.example.bellavoice.ui.theme.bella
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

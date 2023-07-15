@@ -1,4 +1,4 @@
-package com.example.bellavoice.theme.elieen
+package com.example.bellavoice.ui.theme.elieen
 import androidx.compose.ui.graphics.Color
 
 val elieen_theme_light_primary = Color(0xFF3A5BA9)

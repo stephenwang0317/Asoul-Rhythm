@@ -1,4 +1,4 @@
-package com.example.bellavoice.theme.elieen
+package com.example.bellavoice.ui.theme.elieen
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

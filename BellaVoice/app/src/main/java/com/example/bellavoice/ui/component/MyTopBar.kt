@@ -1,4 +1,4 @@
-package com.example.bellavoice.component
+package com.example.bellavoice.ui.component
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -58,9 +58,6 @@ fun MyTopBar() {
             }
         },
         windowInsets = TopAppBarDefaults.windowInsets,
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.LightGray
-        ),
         actions = {
             IconButton(
                 onClick = {
@@ -81,7 +78,6 @@ fun MyTopBar() {
                 Image(
                     imageVector = Icons.Default.Refresh,
                     contentDescription = null,
-                    colorFilter = ColorFilter.tint(Color.Black)
                 )
             }
         }

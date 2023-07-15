@@ -1,9 +1,10 @@
-package com.example.bellavoice.component
+package com.example.bellavoice.ui.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -21,7 +22,7 @@ fun VoiceCard(
     bean: SongBean,
     vm: SongsViewModel
 ) {
-    Card(
+    ElevatedCard(
         modifier = modifier
             .defaultMinSize(
                 minHeight = 100.dp

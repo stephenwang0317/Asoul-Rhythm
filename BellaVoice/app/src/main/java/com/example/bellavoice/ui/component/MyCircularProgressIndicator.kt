@@ -1,4 +1,4 @@
-package com.example.bellavoice.component
+package com.example.bellavoice.ui.component
 
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.LinearEasing

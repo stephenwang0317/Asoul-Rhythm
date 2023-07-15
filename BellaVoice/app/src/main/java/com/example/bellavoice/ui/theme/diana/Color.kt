@@ -1,4 +1,4 @@
-package com.example.bellavoice.theme.diana
+package com.example.bellavoice.ui.theme.diana
 import androidx.compose.ui.graphics.Color
 
 val diana_theme_light_primary = Color(0xFF994060)

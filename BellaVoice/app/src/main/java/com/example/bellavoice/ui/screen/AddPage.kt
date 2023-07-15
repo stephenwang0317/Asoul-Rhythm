@@ -1,4 +1,4 @@
-package com.example.bellavoice.screen
+package com.example.bellavoice.ui.screen
 
 import android.annotation.SuppressLint
 import android.util.Log
@@ -20,7 +20,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -43,7 +42,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.bellavoice.component.MyCircularProgressIndicator
+import com.example.bellavoice.ui.component.MyCircularProgressIndicator
 import com.example.bellavoice.viewmodel.DownloadViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat

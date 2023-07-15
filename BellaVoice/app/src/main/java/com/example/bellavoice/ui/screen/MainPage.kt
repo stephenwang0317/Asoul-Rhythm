@@ -1,4 +1,4 @@
-package com.example.bellavoice.screen
+package com.example.bellavoice.ui.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,9 +16,9 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.bellavoice.component.BoxWithBottomBar
-import com.example.bellavoice.component.MyTopBar
-import com.example.bellavoice.component.VoiceCard
+import com.example.bellavoice.ui.component.BoxWithBottomBar
+import com.example.bellavoice.ui.component.MyTopBar
+import com.example.bellavoice.ui.component.VoiceCard
 import com.example.bellavoice.model.SongBean
 import com.example.bellavoice.viewmodel.SongsViewModel
 
