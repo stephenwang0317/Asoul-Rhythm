@@ -14,6 +14,10 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import com.example.bellavoice.ui.theme.ava.AvaAppTheme
+import com.example.bellavoice.ui.theme.bella.BellaAppTheme
+import com.example.bellavoice.ui.theme.diana.DianaAppTheme
+import com.example.bellavoice.ui.theme.elieen.ElieenAppTheme
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -60,6 +64,26 @@ fun BellaVoiceTheme(
             window.statusBarColor = colorScheme.primary.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
+    }
+
+    MaterialTheme(
+        colorScheme = colorScheme,
+        typography = Typography,
+        content = content
+    )
+}
+
+@Composable
+fun BellaVoiceTheme2(
+    themeChoose: Int = 1,
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
+    val colorScheme = when (themeChoose) {
+        1 -> com.example.bellavoice.ui.theme.ava.LightColors
+        2 -> com.example.bellavoice.ui.theme.bella.LightColors
+        3 -> com.example.bellavoice.ui.theme.diana.LightColors
+        else -> com.example.bellavoice.ui.theme.elieen.LightColors
     }
 
     MaterialTheme(

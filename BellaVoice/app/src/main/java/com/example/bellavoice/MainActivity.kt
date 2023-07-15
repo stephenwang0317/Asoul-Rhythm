@@ -8,31 +8,35 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.bellavoice.Utils.LocalNavController
 import com.example.bellavoice.ui.screen.AddPage
 import com.example.bellavoice.ui.screen.MainPage
-import com.example.bellavoice.ui.theme.ava.AvaTheme
+import com.example.bellavoice.ui.theme.BellaVoiceTheme2
+import com.example.bellavoice.myutils.LocalNavController
+import com.example.bellavoice.myutils.LocalThemeViewModel
+import com.example.bellavoice.viewmodel.ThemeViewModel
 
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            AvaTheme() { Navigator() }
+            CompositionLocalProvider(
+                LocalNavController provides rememberNavController(),
+                LocalThemeViewModel provides ThemeViewModel()
+            ) {
+                val themeVm = LocalThemeViewModel.current
+                BellaVoiceTheme2(themeChoose = themeVm.themeId) { Navigator() }
+            }
         }
     }
-
 }
 
 @Composable
 fun Navigator() {
-    CompositionLocalProvider(
-        LocalNavController provides rememberNavController()
-    ) {
-        val navController = LocalNavController.current
-        NavHost(navController = navController, startDestination = "MainPage") {
-            composable("MainPage") { MainPage() }
-            composable("AddPage") { AddPage() }
-        }
+    val navController = LocalNavController.current
+    NavHost(navController = navController, startDestination = "MainPage") {
+        composable("MainPage") { MainPage() }
+        composable("AddPage") { AddPage() }
     }
+
 }

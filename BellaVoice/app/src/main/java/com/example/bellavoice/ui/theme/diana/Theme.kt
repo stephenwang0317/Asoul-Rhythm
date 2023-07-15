@@ -7,7 +7,7 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 
 
-private val LightColors = lightColorScheme(
+val LightColors = lightColorScheme(
     primary = diana_theme_light_primary,
     onPrimary = diana_theme_light_onPrimary,
     primaryContainer = diana_theme_light_primaryContainer,
@@ -40,7 +40,7 @@ private val LightColors = lightColorScheme(
 )
 
 
-private val DarkColors = darkColorScheme(
+val DarkColors = darkColorScheme(
     primary = diana_theme_dark_primary,
     onPrimary = diana_theme_dark_onPrimary,
     primaryContainer = diana_theme_dark_primaryContainer,

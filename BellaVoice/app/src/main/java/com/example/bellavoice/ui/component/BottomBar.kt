@@ -22,6 +22,7 @@ import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,7 +44,7 @@ fun BottomBar(
             .padding(horizontal = 10.dp)
             .padding(bottom = 10.dp)
             .background(
-                color = Color.LightGray,
+                color = MaterialTheme.colorScheme.primaryContainer,
                 shape = RoundedCornerShape(20)
             ),
         contentAlignment = Alignment.Center

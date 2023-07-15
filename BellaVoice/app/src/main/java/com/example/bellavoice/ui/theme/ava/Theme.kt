@@ -7,7 +7,7 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 
 
-private val LightColors = lightColorScheme(
+val LightColors = lightColorScheme(
     primary = ava_theme_light_primary,
     onPrimary = ava_theme_light_onPrimary,
     primaryContainer = ava_theme_light_primaryContainer,
@@ -40,7 +40,7 @@ private val LightColors = lightColorScheme(
 )
 
 
-private val DarkColors = darkColorScheme(
+val DarkColors = darkColorScheme(
     primary = ava_theme_dark_primary,
     onPrimary = ava_theme_dark_onPrimary,
     primaryContainer = ava_theme_dark_primaryContainer,
@@ -73,9 +73,9 @@ private val DarkColors = darkColorScheme(
 )
 
 @Composable
-fun AvaTheme(
+fun AvaAppTheme(
   useDarkTheme: Boolean = isSystemInDarkTheme(),
-  content: @Composable() () -> Unit
+  content: @Composable () -> Unit
 ) {
   val colors = if (!useDarkTheme) {
     LightColors
