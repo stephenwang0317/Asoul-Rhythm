@@ -84,7 +84,7 @@ class SongsViewModel() : ViewModel() {
     fun nextSong() {
         mediaPlayer.stop()
         var next = _currentSongId + 1
-        if (next == mData.size) {
+        if (next >= mData.size) {
             next = 0
         }
         playMusic(mData[next])
@@ -94,8 +94,8 @@ class SongsViewModel() : ViewModel() {
     fun previousSong() {
         mediaPlayer.stop()
         var prev = _currentSongId - 1
-        if (prev == -1) {
-            prev = mData.size -1
+        if (prev < 0) {
+            prev = mData.size - 1
         }
         playMusic(mData[prev])
         _currentSongId = prev
@@ -109,5 +109,9 @@ class SongsViewModel() : ViewModel() {
     override fun onCleared() {
         mediaPlayer.release()
         super.onCleared()
+    }
+
+    fun getCurrent(): Int {
+        return _currentSongId
     }
 }
