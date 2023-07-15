@@ -1,4 +1,4 @@
-package com.example.compose
+package com.example.bellavoice.theme.bella
 import androidx.compose.ui.graphics.Color
 
 val bella_theme_light_primary = Color(0xFF9C423B)

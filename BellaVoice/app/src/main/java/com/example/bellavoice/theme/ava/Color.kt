@@ -1,4 +1,4 @@
-package com.example.compose
+package com.example.bellavoice.theme.ava
 import androidx.compose.ui.graphics.Color
 
 val ava_theme_light_primary = Color(0xFF006687)
