@@ -43,6 +43,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.bellavoice.component.MyCircularProgressIndicator
 import com.example.bellavoice.viewmodel.DownloadViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -118,7 +119,13 @@ fun AddPage(
         Spacer(modifier = Modifier.height(20.dp))
 
         if (downloadVM.loading) {
-            CircularProgressIndicator(modifier.size(50.dp))
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                MyCircularProgressIndicator(modifier = Modifier.size(300.dp))
+            }
         } else {
 //            SingleLine(title = "bv号", msg = downloadVM.text)
             MyText(title = "时间", msg = timeStamp2DateStr(downloadVM.result.timestamp))
