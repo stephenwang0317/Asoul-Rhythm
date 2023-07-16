@@ -26,8 +26,7 @@ class DownloadViewModel {
 
     suspend fun getUrl() {
         loading = true
-        var tmpPart = 1
-        tmpPart = try {
+        val tmpPart = try {
             part.toInt()
         } catch (e: NumberFormatException) {
             1
@@ -39,7 +38,7 @@ class DownloadViewModel {
             tmp.toString()
         )
         result = tmp
-        if(result.data != null)
+        if (result.data != null)
             fileName = result.data!!.video_title.replace("/", " ")
         loading = false
     }
@@ -76,4 +75,5 @@ class DownloadViewModel {
         return downloadReference
 
     }
+
 }
