@@ -1,6 +1,7 @@
 package com.example.bellavoice.viewmodel
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.media.MediaPlayer
 import android.os.Environment
 import androidx.compose.runtime.getValue
@@ -33,7 +34,6 @@ class SongsViewModel() : ViewModel() {
 
     @SuppressLint("Range")
     fun loadLocalSongs() {
-
         var path =
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).absolutePath
         path = path + File.separator + "SongsManager"
@@ -113,5 +113,11 @@ class SongsViewModel() : ViewModel() {
 
     fun getCurrent(): Int {
         return _currentSongId
+    }
+
+    fun deleteFile(context: Context, bean: SongBean): Boolean {
+        val resolver = context.contentResolver
+        val musicFile = File(bean.path)
+        return true
     }
 }
