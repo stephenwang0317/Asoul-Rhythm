@@ -1,67 +1,121 @@
 package com.example.bellavoice.ui.screen
 
+import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.bellavoice.ui.component.BoxWithBottomBar
-import com.example.bellavoice.ui.component.MyTopBar
-import com.example.bellavoice.ui.component.VoiceCard
+import androidx.compose.ui.unit.sp
 import com.example.bellavoice.model.SongBean
+import com.example.bellavoice.ui.component.MyTopBar
+import com.example.bellavoice.ui.component.SingerGrid
+import com.example.bellavoice.ui.component.VoiceCard2
 import com.example.bellavoice.viewmodel.SongsViewModel
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true)
 @Composable
+@Preview(showBackground = true)
 fun MainPage(
     modifier: Modifier = Modifier
 ) {
     val songVM = SongsViewModel()
     val targetSong by songVM.targetSong.observeAsState(ArrayList<SongBean>())
+    val lazyListState = rememberLazyListState()
 
     Scaffold(
-        topBar = {
-            MyTopBar()
-        }
-    ) { it ->
-        Column {
-            LazyColumn(
-                contentPadding = it,
-                content = {
-                    item { Spacer(modifier = Modifier.height(5.dp)) }
+        topBar = { MyTopBar() },
+        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        modifier = Modifier.background(MaterialTheme.colorScheme.primaryContainer)
+    ) {
+        MainPageContent(
+            contentPaddingValues = it,
+            songsViewModel = songVM,
+            songList = targetSong,
+            lazyListState = lazyListState
+        )
+    }
+}
 
-                    itemsIndexed(targetSong) { index, bean ->
-                        VoiceCard(
-                            modifier = Modifier.fillMaxWidth(),
-                            bean = bean,
-                            vm = songVM,
-                            selfIndex = index
-                        )
-                    }
-                    item { Spacer(modifier = Modifier.height(80.dp)) }
-                },
-                verticalArrangement = Arrangement.spacedBy(10.dp),
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(
-                        start = 5.dp, end = 5.dp
-                    )
-                    .weight(1f)
-            )
-        }
-        BoxWithBottomBar(songVM)
+
+@Composable
+fun MainPageTitle(
+    modifier: Modifier = Modifier,
+    title: String = "歌曲列表",
+    otherComponent: @Composable () -> Unit = {},
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = title,
+            fontSize = 26.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .padding(start = 10.dp, top = 10.dp)
+        )
+        otherComponent()
+    }
+}
+
+@Composable
+fun MainPageContent(
+    contentPaddingValues: PaddingValues,
+    songsViewModel: SongsViewModel,
+    songList: MutableList<SongBean>,
+    lazyListState: LazyListState
+) {
+    LazyColumn(
+        content = {
+
+            item { SingerHeader() }
+
+            item { MainPageTitle(title = "播放列表") }
+            itemsIndexed(songList) { index, bean ->
+                VoiceCard2(
+                    bean = bean,
+                    vm = songsViewModel
+                )
+            }
+        },
+        verticalArrangement = Arrangement.spacedBy(0.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.primaryContainer)
+            .padding(horizontal = 15.dp),
+
+        state = lazyListState,
+        contentPadding = contentPaddingValues
+    )
+}
+
+@Composable
+fun SingerHeader() {
+    Column(Modifier.fillMaxWidth()) {
+        MainPageTitle(title = "Asoul时代，沸腾期待")
+        SingerGrid()
+        Spacer(modifier = Modifier.height(30.dp))
     }
 }
