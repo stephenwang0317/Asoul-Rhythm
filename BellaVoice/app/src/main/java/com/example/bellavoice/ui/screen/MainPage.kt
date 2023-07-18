@@ -2,6 +2,7 @@ package com.example.bellavoice.ui.screen
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -21,6 +22,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -53,7 +57,7 @@ fun MainPage(
             contentPaddingValues = it,
             songsViewModel = songVM,
             songList = targetSong,
-            lazyListState = lazyListState
+            lazyListState = lazyListState,
         )
     }
 }
@@ -87,10 +91,16 @@ fun MainPageContent(
     songList: MutableList<SongBean>,
     lazyListState: LazyListState
 ) {
+    var picExpand by remember { mutableStateOf(false) }
     LazyColumn(
         content = {
 
-            item { SingerHeader() }
+            item {
+                SingerHeader(
+                    expand = picExpand,
+                    textClick = { picExpand = !picExpand }
+                )
+            }
 
             item { MainPageTitle(title = "播放列表") }
             itemsIndexed(songList) { index, bean ->
@@ -112,10 +122,15 @@ fun MainPageContent(
 }
 
 @Composable
-fun SingerHeader() {
+fun SingerHeader(
+    expand: Boolean,
+    textClick: () -> Unit
+) {
     Column(Modifier.fillMaxWidth()) {
-        MainPageTitle(title = "Asoul时代，沸腾期待")
-        SingerGrid()
+        MainPageTitle(
+            title = "ASOUL时代，沸腾期待",
+            modifier = Modifier.clickable { textClick() })
+        SingerGrid(expand = expand)
         Spacer(modifier = Modifier.height(30.dp))
     }
 }
