@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -22,13 +23,15 @@ class MainActivity : ComponentActivity() {
         setContent {
             CompositionLocalProvider(
                 LocalNavController provides rememberNavController(),
-                LocalThemeViewModel provides ThemeViewModel()
+                LocalThemeViewModel provides ThemeViewModel(LocalContext.current)
             ) {
                 val themeVm = LocalThemeViewModel.current
                 BellaVoiceTheme2(themeChoose = themeVm.themeId) { Navigator() }
             }
         }
     }
+
+
 }
 
 @Composable

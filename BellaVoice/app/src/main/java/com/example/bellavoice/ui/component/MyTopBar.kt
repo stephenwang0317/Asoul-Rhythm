@@ -2,7 +2,6 @@ package com.example.bellavoice.ui.component
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.graphics.ColorFilter
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -63,19 +62,19 @@ fun MyTopBar() {
                 TopBarTitleImage(
                     drawableId = R.drawable._ava,
                     themeVM = themeVM
-                ) { themeVM.themeId = 1 }
+                ) { themeVM.changeTheme(1) }
                 TopBarTitleImage(
                     drawableId = R.drawable._bella,
                     themeVM = themeVM
-                ) { themeVM.themeId = 2 }
+                ) { themeVM.changeTheme(2) }
                 TopBarTitleImage(
                     drawableId = R.drawable._diana,
                     themeVM = themeVM
-                ) { themeVM.themeId = 3 }
+                ) { themeVM.changeTheme(3) }
                 TopBarTitleImage(
                     drawableId = R.drawable._elieen,
                     themeVM = themeVM
-                ) { themeVM.themeId = 4 }
+                ) { themeVM.changeTheme(4) }
             }
         },
         windowInsets = TopAppBarDefaults.windowInsets,
