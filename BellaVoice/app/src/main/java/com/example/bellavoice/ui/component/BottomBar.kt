@@ -2,6 +2,7 @@ package com.example.bellavoice.ui.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -27,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.example.bellavoice.viewmodel.SongsViewModel
@@ -36,7 +38,7 @@ fun BottomBar(
     vm: SongsViewModel
 ) {
 
-    Box(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
@@ -44,51 +46,28 @@ fun BottomBar(
             .padding(horizontal = 10.dp)
             .padding(bottom = 10.dp)
             .background(
-                color = MaterialTheme.colorScheme.primaryContainer,
+                color = MaterialTheme.colorScheme.secondary,
                 shape = RoundedCornerShape(20)
-            ),
-        contentAlignment = Alignment.Center
+            )
+            .clickable(enabled = false) { }
+            .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(20)),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .wrapContentWidth(Alignment.CenterHorizontally),
-            verticalAlignment = Alignment.CenterVertically, //设置垂直方向对齐
-            horizontalArrangement = Arrangement.spacedBy(10.dp) //设置子项的间距
-        ) {
-            Spacer(modifier = Modifier.weight(1f))
-            BottomIcon(imageVector = Icons.Default.SkipPrevious) {
-                vm.previousSong()
-            }
-            BottomIcon(imageVector = if (vm.isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow) {
-                if (vm.isPlaying) vm.stopPlay()
-                else vm.resumePlay()
-            }
-            BottomIcon(imageVector = Icons.Default.SkipNext) {
-                vm.nextSong()
-            }
+        Spacer(modifier = Modifier.weight(1f))
+        BottomIcon(imageVector = Icons.Default.SkipPrevious) {
+            vm.previousSong()
         }
+        BottomIcon(imageVector = if (vm.isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow) {
+            if (vm.isPlaying) vm.stopPlay()
+            else vm.resumePlay()
+        }
+        BottomIcon(imageVector = Icons.Default.SkipNext) {
+            vm.nextSong()
+        }
+
     }
 }
 
-@Composable
-fun BoxWithBottomBar(
-    vm: SongsViewModel
-) {
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .background(Color.Transparent)
-        ) {
-
-        }
-        BottomBar(vm)
-    }
-}
 
 @Composable
 fun BottomIcon(
@@ -101,7 +80,10 @@ fun BottomIcon(
         modifier = Modifier
             .size(40.dp)
             .padding(5.dp)
-            .clickable { onClickAction() }
+            .clickable { onClickAction() },
+        colorFilter = ColorFilter.tint(
+            MaterialTheme.colorScheme.onSecondary
+        )
     )
 }
 

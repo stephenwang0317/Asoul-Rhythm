@@ -32,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bellavoice.model.SongBean
+import com.example.bellavoice.ui.component.BottomBar
 import com.example.bellavoice.ui.component.MyTopBar
 import com.example.bellavoice.ui.component.SingerGrid
 import com.example.bellavoice.ui.component.VoiceCard2
@@ -51,7 +52,8 @@ fun MainPage(
     Scaffold(
         topBar = { MyTopBar() },
         contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-        modifier = Modifier.background(MaterialTheme.colorScheme.primaryContainer)
+        modifier = Modifier.background(MaterialTheme.colorScheme.primaryContainer),
+        bottomBar = { BottomBar(vm = songVM) }
     ) {
         MainPageContent(
             contentPaddingValues = it,
