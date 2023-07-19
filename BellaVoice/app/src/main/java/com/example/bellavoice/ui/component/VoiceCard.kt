@@ -132,13 +132,13 @@ fun VoiceCard2(
                     fontSize = 18.sp,
                     modifier = Modifier.padding(bottom = 5.dp),
                     maxLines = 1,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
                 )
                 Text(
                     text = "贝拉Kira",
                     fontSize = 14.sp,
                     maxLines = 1,
-                    color = Color.LightGray
+                    color = MaterialTheme.colorScheme.inversePrimary
                 )
             }
             Icon(
