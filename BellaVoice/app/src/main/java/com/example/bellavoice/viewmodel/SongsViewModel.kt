@@ -42,7 +42,7 @@ class SongsViewModel() : ViewModel() {
         if (baseFile.isDirectory) {
             for (file in baseFile.listFiles()!!) {
                 val item = SongBean(
-                    song = file.name,
+                    song = file.name.replace("(\\.[^.]+)\$".toRegex(),""),
                     path = file.path,
                     id = id
                 )
