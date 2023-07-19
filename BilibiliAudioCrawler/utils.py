@@ -1,4 +1,5 @@
 import json
+import re
 
 import requests
 from bs4 import BeautifulSoup as bs
@@ -17,12 +18,19 @@ def get_src_url(bv, part):
 
     print("url: " + url)
     text = requests.get(url=url, headers=headers)
-    # print(text.text)
+    print(text.text)
     soup = bs(text.text, 'lxml')
     scripts = soup.find_all("script")
 
     video_title = soup.title.string
     video_title = video_title.rstrip("_哔哩哔哩_bilibili")
+
+    img_url_tag = soup.find_all("meta", attrs={"itemprop": "image"})[0]
+    img_url = None
+    if img_url_tag is not None:
+        img_url = str(img_url_tag.get("content"))
+        result = re.sub(r"@(.*)$", "", img_url, 0, re.MULTILINE)
+        img_url_with_https = "https:" + result
 
     src_json = None
 
@@ -49,7 +57,8 @@ def get_src_url(bv, part):
             )
         return {
             "video_title": video_title,
-            "urls": ret2
+            "urls": ret2,
+            "img": img_url_with_https
         }
     except TypeError:
         return None
