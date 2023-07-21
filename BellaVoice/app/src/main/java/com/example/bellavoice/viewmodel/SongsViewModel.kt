@@ -7,15 +7,20 @@ import android.os.Environment
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.bellavoice.database.SongsDatabase
+import com.example.bellavoice.database.SongsRepository
 import com.example.bellavoice.model.SongBean
 import java.io.File
 
-class SongsViewModel() : ViewModel() {
+class SongsViewModel(context: Context) : ViewModel() {
     private var mData: MutableList<SongBean> = ArrayList()
     private val _targetSong = MutableLiveData<MutableList<SongBean>>()
     private var _currentSongId = -1
+
+    private val songsRepository: SongsRepository
 
     var isPlaying by mutableStateOf(false)
         private set
@@ -23,6 +28,13 @@ class SongsViewModel() : ViewModel() {
         get() = _targetSong
 
     private var mediaPlayer: MediaPlayer = MediaPlayer()
+
+    init {
+        val songsDao = SongsDatabase.getInstance(context).songsDao()
+        songsRepository = SongsRepository(songsDao)
+        loadLocalSongs()
+        searchSong()
+    }
 
     fun searchSong(targetSong: String = "") {
         if (targetSong != "") {
@@ -38,15 +50,14 @@ class SongsViewModel() : ViewModel() {
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).absolutePath
         path = path + File.separator + "SongsManager"
         val baseFile = File(path)
-        var id = 0
+//        var id = 0
         if (baseFile.isDirectory) {
             for (file in baseFile.listFiles()!!) {
                 val item = SongBean(
-                    song = file.name.replace("(\\.[^.]+)\$".toRegex(),""),
+                    song = file.name.replace("(\\.[^.]+)\$".toRegex(), ""),
                     path = file.path,
-                    id = id
                 )
-                id++
+//                id++
                 mData.add(item)
             }
         }
@@ -101,11 +112,6 @@ class SongsViewModel() : ViewModel() {
         _currentSongId = prev
     }
 
-    init {
-        loadLocalSongs()
-        searchSong()
-    }
-
     override fun onCleared() {
         mediaPlayer.release()
         super.onCleared()
@@ -119,5 +125,9 @@ class SongsViewModel() : ViewModel() {
         val resolver = context.contentResolver
         val musicFile = File(bean.path)
         return true
+    }
+
+    fun release() {
+        mediaPlayer.release()
     }
 }

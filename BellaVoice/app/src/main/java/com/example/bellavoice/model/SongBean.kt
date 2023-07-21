@@ -1,6 +1,11 @@
 package com.example.bellavoice.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "songs")
 data class SongBean @JvmOverloads constructor(
+    @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val uri: String = "",
     val song: String = "", //歌名
