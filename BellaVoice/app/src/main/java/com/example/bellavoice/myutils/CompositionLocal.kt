@@ -2,6 +2,7 @@ package com.example.bellavoice.myutils
 
 import androidx.compose.runtime.compositionLocalOf
 import androidx.navigation.NavHostController
+import com.example.bellavoice.viewmodel.DownloadViewModel
 import com.example.bellavoice.viewmodel.SongsViewModel
 import com.example.bellavoice.viewmodel.ThemeViewModel
 
@@ -17,3 +18,6 @@ val LocalThemeViewModel =
 
 val LocalSongsViewModel =
     compositionLocalOf<SongsViewModel> { error("Songs ViewModel Not Found") }
+
+val LocalDownloadViewModel =
+    compositionLocalOf<DownloadViewModel> { error("Download ViewModel Not Found") }
