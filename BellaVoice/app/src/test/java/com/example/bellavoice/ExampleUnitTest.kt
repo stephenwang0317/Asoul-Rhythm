@@ -1,5 +1,7 @@
 package com.example.bellavoice
 
+import androidx.compose.runtime.sourceInformation
+import com.example.bellavoice.myutils.ShortUrltoLong
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -12,6 +14,7 @@ import org.junit.Assert.*
 class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+        val str:String = ShortUrltoLong("https://b23.tv/8ClJ5VU")
+        println(str)
     }
 }
