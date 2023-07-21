@@ -32,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bellavoice.model.SongBean
+import com.example.bellavoice.myutils.LocalSongsViewModel
 import com.example.bellavoice.ui.component.BottomBar
 import com.example.bellavoice.ui.component.MyTopBar
 import com.example.bellavoice.ui.component.SingerGrid
@@ -45,7 +46,7 @@ import com.example.bellavoice.viewmodel.SongsViewModel
 fun MainPage(
     modifier: Modifier = Modifier
 ) {
-    val songVM = SongsViewModel()
+    val songVM = LocalSongsViewModel.current
     val targetSong by songVM.targetSong.observeAsState(ArrayList<SongBean>())
     val lazyListState = rememberLazyListState()
 

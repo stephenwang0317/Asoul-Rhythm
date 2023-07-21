@@ -2,6 +2,7 @@ package com.example.bellavoice.myutils
 
 import androidx.compose.runtime.compositionLocalOf
 import androidx.navigation.NavHostController
+import com.example.bellavoice.viewmodel.SongsViewModel
 import com.example.bellavoice.viewmodel.ThemeViewModel
 
 
@@ -13,3 +14,6 @@ val LocalOpenDelay =
 
 val LocalThemeViewModel =
     compositionLocalOf<ThemeViewModel> { error("Theme ViewModel Not Found") }
+
+val LocalSongsViewModel =
+    compositionLocalOf<SongsViewModel> { error("Songs ViewModel Not Found") }

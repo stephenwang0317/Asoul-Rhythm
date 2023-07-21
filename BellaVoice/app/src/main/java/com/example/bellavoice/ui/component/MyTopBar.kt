@@ -24,6 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.core.content.ContextCompat
 import com.example.bellavoice.R
 import com.example.bellavoice.myutils.LocalNavController
+import com.example.bellavoice.myutils.LocalSongsViewModel
 import com.example.bellavoice.myutils.LocalThemeViewModel
 import com.example.bellavoice.viewmodel.SongsViewModel
 import com.example.bellavoice.viewmodel.ThemeViewModel
@@ -34,7 +35,7 @@ import kotlinx.coroutines.launch
 fun MyTopBar() {
     val navController = LocalNavController.current
     val context = LocalContext.current
-    val songVM = SongsViewModel()
+    val songVM = LocalSongsViewModel.current
     val coroutineScope = rememberCoroutineScope()
     val refreshLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
