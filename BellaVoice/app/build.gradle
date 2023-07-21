@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -83,7 +84,12 @@ dependencies {
     //data-store
     implementation "androidx.datastore:datastore-preferences:1.0.0"
 
-    //room
-    implementation "androidx.room:room-ktx:2.5.2"
-    implementation "androidx.room:room-compiler:2.5.2"
+
+    def room_version = "2.5.2"
+    // FOR ROOM
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    // optional - Kotlin Extensions and Coroutines support for Room
+    implementation "androidx.room:room-ktx:$room_version"
+    // END FOR ROOM
 }
