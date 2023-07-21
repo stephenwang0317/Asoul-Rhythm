@@ -42,6 +42,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.bellavoice.myutils.LocalDownloadViewModel
 import com.example.bellavoice.ui.component.MyCircularProgressIndicator
 import com.example.bellavoice.viewmodel.DownloadViewModel
 import kotlinx.coroutines.launch
@@ -53,9 +54,7 @@ import java.util.Date
 fun AddPage(
     modifier: Modifier = Modifier.fillMaxSize()
 ) {
-    val downloadVM by remember {
-        mutableStateOf(DownloadViewModel())
-    }
+    val downloadVM = LocalDownloadViewModel.current
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 

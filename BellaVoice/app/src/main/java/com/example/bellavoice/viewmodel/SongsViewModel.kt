@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.media.MediaPlayer
 import android.os.Environment
+import android.util.Log
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
@@ -17,35 +19,36 @@ import java.io.File
 
 class SongsViewModel(context: Context) : ViewModel() {
     private var mData: MutableList<SongBean> = ArrayList()
-    private val _targetSong = MutableLiveData<MutableList<SongBean>>()
+    val targetSong = mutableStateListOf<SongBean>()
     private var _currentSongId = -1
 
     private val songsRepository: SongsRepository
 
     var isPlaying by mutableStateOf(false)
         private set
-    val targetSong: MutableLiveData<MutableList<SongBean>>
-        get() = _targetSong
 
     private var mediaPlayer: MediaPlayer = MediaPlayer()
 
     init {
         val songsDao = SongsDatabase.getInstance(context).songsDao()
         songsRepository = SongsRepository(songsDao)
-        loadLocalSongs()
-        searchSong()
+//        loadLocalSongs()
+//        searchSong()
     }
 
     fun searchSong(targetSong: String = "") {
         if (targetSong != "") {
 
         } else {
-            _targetSong.postValue(mData)
+            this.targetSong.clear()
+            Log.d("==============", mData.size.toString())
+            this.targetSong.addAll(mData)
         }
     }
 
     @SuppressLint("Range")
     fun loadLocalSongs() {
+        mData.clear()
         var path =
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).absolutePath
         path = path + File.separator + "SongsManager"
