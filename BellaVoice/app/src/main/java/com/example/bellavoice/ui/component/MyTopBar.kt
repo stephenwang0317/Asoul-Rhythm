@@ -41,7 +41,10 @@ fun MyTopBar() {
         ActivityResultContracts.RequestPermission()
     ) { isGrant ->
         if (isGrant) {
-            coroutineScope.launch { songVM.loadLocalSongs() }
+            coroutineScope.launch {
+                songVM.loadLocalSongs()
+                songVM.searchSong("")
+            }
         } else {
             Toast.makeText(context, "请授予权限", Toast.LENGTH_SHORT).show()
         }
@@ -87,7 +90,10 @@ fun MyTopBar() {
                             context,
                             Manifest.permission.READ_EXTERNAL_STORAGE
                         ) == PackageManager.PERMISSION_GRANTED -> {
-                            coroutineScope.launch { songVM.loadLocalSongs() }
+                            coroutineScope.launch {
+                                songVM.loadLocalSongs()
+                                songVM.searchSong("")
+                            }
                         }
 
                         else -> {

@@ -20,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -47,8 +48,13 @@ fun MainPage(
     modifier: Modifier = Modifier
 ) {
     val songVM = LocalSongsViewModel.current
-    val targetSong by songVM.targetSong.observeAsState(ArrayList<SongBean>())
+    val targetSong = songVM.targetSong
     val lazyListState = rememberLazyListState()
+
+    LaunchedEffect(Unit) {
+        songVM.loadLocalSongs()
+        songVM.searchSong("")
+    }
 
     Scaffold(
         topBar = { MyTopBar() },
