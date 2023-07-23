@@ -39,6 +39,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.bellavoice.R
 import com.example.bellavoice.model.SongBean
 import com.example.bellavoice.viewmodel.SongsViewModel
@@ -112,11 +113,13 @@ fun VoiceCard2(
                 .weight(1f),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.album_default),
+            AsyncImage(
+                model = bean.uri,
                 contentDescription = null,
+                placeholder = painterResource(id = R.drawable.album_default),
+                error = painterResource(id = R.drawable.album_default),
                 modifier = Modifier
-                    .size(60.dp)
+                    .size(96.dp, 60.dp)
                     .clip(
                         RoundedCornerShape(20)
                     ),
