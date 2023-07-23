@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -42,8 +43,7 @@ fun MyTopBar() {
     ) { isGrant ->
         if (isGrant) {
             coroutineScope.launch {
-                songVM.loadLocalSongs()
-                songVM.searchSong("")
+                songVM.refreshList()
             }
         } else {
             Toast.makeText(context, "请授予权限", Toast.LENGTH_SHORT).show()
@@ -91,8 +91,7 @@ fun MyTopBar() {
                             Manifest.permission.READ_EXTERNAL_STORAGE
                         ) == PackageManager.PERMISSION_GRANTED -> {
                             coroutineScope.launch {
-                                songVM.loadLocalSongs()
-                                songVM.searchSong("")
+                                songVM.refreshList()
                             }
                         }
 
@@ -102,11 +101,15 @@ fun MyTopBar() {
                     }
                 },
             ) {
-                Image(
-                    imageVector = Icons.Default.Refresh,
-                    contentDescription = null,
-                    colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(color = MaterialTheme.colorScheme.onPrimary)
-                )
+                if (songVM.isRefreshing) {
+                    CircularProgressIndicator()
+                } else {
+                    Image(
+                        imageVector = Icons.Default.Refresh,
+                        contentDescription = null,
+                        colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(color = MaterialTheme.colorScheme.onPrimary)
+                    )
+                }
             }
         },
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
