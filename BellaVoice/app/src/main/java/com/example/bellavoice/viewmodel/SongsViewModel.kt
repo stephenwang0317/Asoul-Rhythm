@@ -10,19 +10,33 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.isDebugInspectorInfoEnabled
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.bellavoice.database.SongsDatabase
 import com.example.bellavoice.database.SongsRepository
 import com.example.bellavoice.model.SongBean
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.transform
+import kotlinx.coroutines.launch
 import java.io.File
 
 class SongsViewModel(context: Context) : ViewModel() {
     private var mData: MutableList<SongBean> = ArrayList()
     val targetSong = mutableStateListOf<SongBean>()
     private var _currentSongId = -1
+//    var currentBean: SongBean? = null
+
 
     private val songsRepository: SongsRepository
+    private val _songsState = MutableStateFlow(SongsViewState())
+    val songsState: StateFlow<SongsViewState>
+        get() = _songsState
 
     var isPlaying by mutableStateOf(false)
         private set
@@ -32,8 +46,9 @@ class SongsViewModel(context: Context) : ViewModel() {
     init {
         val songsDao = SongsDatabase.getInstance(context).songsDao()
         songsRepository = SongsRepository(songsDao)
-//        loadLocalSongs()
-//        searchSong()
+        viewModelScope.launch {
+            getAllById()
+        }
     }
 
     fun searchSong(targetSong: String = "") {
@@ -77,7 +92,7 @@ class SongsViewModel(context: Context) : ViewModel() {
             prepare()
             start()
         }
-        _currentSongId = bean.id
+        _currentSongId = bean.id ?: 0
         isPlaying = true
     }
 
@@ -120,17 +135,64 @@ class SongsViewModel(context: Context) : ViewModel() {
         super.onCleared()
     }
 
-    fun getCurrent(): Int {
-        return _currentSongId
-    }
-
-    fun deleteFile(context: Context, bean: SongBean): Boolean {
-        val resolver = context.contentResolver
-        val musicFile = File(bean.path)
-        return true
-    }
-
     fun release() {
         mediaPlayer.release()
     }
+
+    private suspend fun scanLocalAndWriteDatabase() {
+        var path =
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).absolutePath
+        path = path + File.separator + "SongsManager"
+        val baseFile = File(path)
+//        var id = 0
+        if (baseFile.isDirectory) {
+            for (file in baseFile.listFiles()!!) {
+                val item = SongBean(
+                    id = null,
+                    song = file.name.replace("(\\.[^.]+)\$".toRegex(), ""),
+                    path = file.path,
+                )
+                songsRepository.addSong(item)
+            }
+        }
+    }
+
+    var isRefreshing by mutableStateOf(false)
+        private set
+
+    suspend fun refreshList() {
+        isRefreshing = true
+
+        songsRepository.deleteAll()
+        scanLocalAndWriteDatabase()
+
+        isRefreshing = false
+    }
+
+    private suspend fun getAllBySelectOrder(type: Int) {
+        val flow = when (type) {
+            0 -> songsRepository.getAllOrderById()
+            1 -> songsRepository.getAllOrderBySinger()
+            else -> songsRepository.getAllOrderBySong()
+        }
+        combine(flow) { flowArr ->
+            SongsViewState(flowArr[0])
+        }.collect { _songsState.value = it }
+    }
+
+    suspend fun getAllById() {
+        getAllBySelectOrder(0)
+    }
+
+    suspend fun getAllBySinger() {
+        getAllBySelectOrder(1)
+    }
+
+    suspend fun getAllBySong() {
+        getAllBySelectOrder(2)
+    }
 }
+
+data class SongsViewState(
+    val songs: List<SongBean> = emptyList()
+)
