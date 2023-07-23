@@ -11,7 +11,7 @@ internal fun ShortUrltoLong(shortUrl: String): String {
         .url(shortUrl)
         .build()
     val response = okHttpClient.newCall(request).execute()
-    val result = response.body()?.string() ?: ""
+    val result = response.body?.string() ?: ""
     if (result.isNotEmpty()) {
         val regex = Regex("BV[^?]*")
         return regex.find(result)?.value ?: ""
