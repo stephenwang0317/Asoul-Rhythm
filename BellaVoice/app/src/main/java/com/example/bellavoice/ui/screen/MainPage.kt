@@ -20,7 +20,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Sort
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -164,7 +163,8 @@ fun PlayListTitle(
 
     Row(
         modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.End
     ) {
         Text(
             text = "歌曲列表",
@@ -175,11 +175,9 @@ fun PlayListTitle(
         )
         Spacer(modifier = Modifier.weight(1f))
         Row(
-            modifier = Modifier.padding(end = 10.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            IconButton(
-                onClick = {
+            modifier = Modifier
+                .padding(end = 10.dp, top = 10.dp)
+                .clickable {
                     choose = if (choose + 1 < sortType.size) choose + 1 else 0
                     when (choose) {
                         0 -> coroutineScope.launch { songsViewModel.getAllById() }
@@ -187,12 +185,14 @@ fun PlayListTitle(
                         else -> coroutineScope.launch { songsViewModel.getAllBySong() }
                     }
                 },
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                imageVector = Icons.Default.Sort,
+                contentDescription = null,
                 modifier = Modifier
-                    .padding(end = 5.dp)
                     .size(20.dp)
-            ) {
-                Image(imageVector = Icons.Default.Sort, contentDescription = null)
-            }
+            )
             Text(text = sortType[choose], fontSize = 20.sp)
         }
     }
