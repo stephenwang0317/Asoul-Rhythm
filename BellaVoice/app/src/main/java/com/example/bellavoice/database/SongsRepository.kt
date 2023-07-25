@@ -1,9 +1,7 @@
 package com.example.bellavoice.database
 
-import androidx.lifecycle.LiveData
 import com.example.bellavoice.model.SongBean
 import kotlinx.coroutines.flow.Flow
-import retrofit2.http.Query
 
 class SongsRepository(private val songsDao: SongsDao) {
 
@@ -31,5 +29,15 @@ class SongsRepository(private val songsDao: SongsDao) {
         songsDao.delete(item)
     }
 
+    suspend fun checkIfExist(path: String): Int {
+        return songsDao.checkIfExist(path)
+    }
 
+    suspend fun getSongById(id: Int): SongBean {
+        return songsDao.getSongById(id)
+    }
+
+    suspend fun upsertSong(song: SongBean) {
+        songsDao.upsertSong(song)
+    }
 }

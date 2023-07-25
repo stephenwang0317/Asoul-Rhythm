@@ -1,10 +1,10 @@
 package com.example.bellavoice.database
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Upsert
 import com.example.bellavoice.model.SongBean
 import kotlinx.coroutines.flow.Flow
 
@@ -27,4 +27,13 @@ interface SongsDao {
 
     @Insert
     suspend fun insert(item: SongBean)
+
+    @Query("SELECT COUNT(*) FROM songs WHERE path=:path")
+    suspend fun checkIfExist(path: String): Int
+
+    @Query("SELECT * FROM songs WHERE id=:id")
+    suspend fun getSongById(id: Int): SongBean
+
+    @Upsert
+    suspend fun upsertSong(item: SongBean)
 }
