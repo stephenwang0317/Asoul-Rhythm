@@ -5,5 +5,4 @@ data class UrlResult(
     val message: String = "",
     val status: Int = -1,
     val timestamp: Double = 0.0,
-    val img: String = ""
 )
