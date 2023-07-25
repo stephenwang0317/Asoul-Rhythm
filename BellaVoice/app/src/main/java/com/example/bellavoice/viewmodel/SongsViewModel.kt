@@ -9,20 +9,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.isDebugInspectorInfoEnabled
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bellavoice.database.SongsDatabase
 import com.example.bellavoice.database.SongsRepository
 import com.example.bellavoice.model.SongBean
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -163,8 +157,28 @@ class SongsViewModel(context: Context) : ViewModel() {
     suspend fun refreshList() {
         isRefreshing = true
 
-        songsRepository.deleteAll()
-        scanLocalAndWriteDatabase()
+        var path =
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).absolutePath
+        path = path + File.separator + "SongsManager"
+        val baseFile = File(path)
+//        var id = 0
+        if (baseFile.isDirectory) {
+            Log.e("listFiles.size", baseFile.listFiles()?.size.toString())
+            for (file in baseFile.listFiles()!!) {
+                if (songsRepository.checkIfExist(file.path) == 1) {
+                    Log.e("checkIfExist", "Exist")
+                    continue
+                } else {
+                    val item = SongBean(
+                        id = null,
+                        song = file.name.replace("(\\.[^.]+)\$".toRegex(), ""),
+                        path = file.path,
+                    )
+                    songsRepository.addSong(item)
+                    Log.e("checkIfExist", "Not Exist")
+                }
+            }
+        }
 
         isRefreshing = false
     }
@@ -190,6 +204,14 @@ class SongsViewModel(context: Context) : ViewModel() {
 
     suspend fun getAllBySong() {
         getAllBySelectOrder(2)
+    }
+
+    suspend fun upsert(songBean: SongBean) {
+        songsRepository.upsertSong(songBean)
+    }
+
+    suspend fun getSingleSong(id:Int):SongBean {
+        return songsRepository.getSongById(id)
     }
 }
 
