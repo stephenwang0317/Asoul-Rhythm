@@ -1,7 +1,6 @@
 package com.example.bellavoice.ui.screen
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -27,9 +26,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,7 +40,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bellavoice.myutils.LocalDownloadViewModel
 import com.example.bellavoice.ui.component.MyCircularProgressIndicator
-import com.example.bellavoice.viewmodel.DownloadViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -52,7 +47,7 @@ import java.util.Date
 @Preview(showBackground = true)
 @Composable
 fun AddPage(
-    modifier: Modifier = Modifier.fillMaxSize()
+    modifier: Modifier = Modifier
 ) {
     val downloadVM = LocalDownloadViewModel.current
     val coroutineScope = rememberCoroutineScope()
@@ -60,7 +55,7 @@ fun AddPage(
 
     Column(
         modifier = modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .padding(10.dp),
     ) {
         Spacer(
@@ -165,10 +160,10 @@ fun timeStamp2DateStr(timeStamp: Double): String {
     val date = Date(timeStamp2)
     val pattern = "yyyy-MM-dd HH:mm:ss"
     val simpleDateFormat = SimpleDateFormat(pattern)
-    Log.i(
-        "===========time",
-        simpleDateFormat.format(date)
-    )
+//    Log.i(
+//        "===========time",
+//        simpleDateFormat.format(date)
+//    )
     return simpleDateFormat.format(date)
 }
 
