@@ -11,8 +11,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.example.bellavoice.model.UrlResult
 import com.example.bellavoice.service.UrlService
+import java.io.File
 
-class DownloadViewModel {
+class DownloadViewModel() {
     var loading by mutableStateOf(false)
         private set
 
@@ -23,6 +24,8 @@ class DownloadViewModel {
     var result by mutableStateOf(UrlResult())
 
     private val urlService = UrlService.instance()
+
+    val downloadMap: MutableMap<Long, DownloadInfo> = mutableMapOf()
 
     suspend fun getUrl() {
         loading = true
@@ -43,6 +46,16 @@ class DownloadViewModel {
         loading = false
     }
 
+    suspend fun getUrl(bv: String): UrlResult {
+        val tmp = urlService.getUrl(bv)
+        Log.i(
+            "suspend fun getUrl(bv: String): UrlResult",
+            tmp.toString()
+        )
+        return tmp
+
+    }
+
     fun downloadPdf(baseActivity: Context, quality: Int = 0): Long {
         if (result.data == null)
             return 0
@@ -59,6 +72,10 @@ class DownloadViewModel {
             "/SongsManager/$fileName$extension"
         )
 
+        val path =
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).absolutePath
+        val filePath =
+            path + File.separator + "SongsManager" + File.separator + "$fileName$extension"
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
         request.setTitle(result.data!!.video_title)
         request
@@ -71,9 +88,14 @@ class DownloadViewModel {
 
         downloadReference = dm.enqueue(request)
 
+        downloadMap[downloadReference] = DownloadInfo(result, filePath)
 //        loading = false
         return downloadReference
 
     }
-
 }
+
+data class DownloadInfo(
+    val info: UrlResult = UrlResult(),
+    val path: String = ""
+)
