@@ -1,29 +1,30 @@
 package com.example.bellavoice
 
+import android.app.DownloadManager
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.util.Consumer
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.bellavoice.myutils.LocalDownloadViewModel
-import com.example.bellavoice.ui.screen.AddPage
-import com.example.bellavoice.ui.screen.MainPage
-import com.example.bellavoice.ui.theme.BellaVoiceTheme2
 import com.example.bellavoice.myutils.LocalNavController
 import com.example.bellavoice.myutils.LocalSongsViewModel
 import com.example.bellavoice.myutils.LocalThemeViewModel
+import com.example.bellavoice.myutils.MyBroadcastReceiver
+import com.example.bellavoice.ui.screen.AddPage
+import com.example.bellavoice.ui.screen.ChangeImage
+import com.example.bellavoice.ui.screen.MainPage
+import com.example.bellavoice.ui.theme.BellaVoiceTheme2
 import com.example.bellavoice.viewmodel.DownloadViewModel
 import com.example.bellavoice.viewmodel.SongsViewModel
 import com.example.bellavoice.viewmodel.ThemeViewModel
@@ -34,6 +35,8 @@ class MainActivity : ComponentActivity() {
     private var songsViewModel: SongsViewModel? = null
     private var navController: NavHostController? = null
     private var downloadViewModel = DownloadViewModel()
+
+    private val myReceiver = MyBroadcastReceiver(downloadViewModel)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -49,7 +52,7 @@ class MainActivity : ComponentActivity() {
                 BellaVoiceTheme2(themeChoose = themeVm.themeId) { Navigator() }
             }
         }
-
+        registerReceiver(myReceiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
         processExtraData()
     }
 
@@ -72,8 +75,19 @@ class MainActivity : ComponentActivity() {
 
     }
 
+    override fun onResume() {
+        registerReceiver(myReceiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
+        super.onResume()
+    }
+
+    override fun onPause() {
+        unregisterReceiver(myReceiver)
+        super.onPause()
+    }
+
     override fun onDestroy() {
         songsViewModel?.release()
+        unregisterReceiver(myReceiver)
         super.onDestroy()
     }
 }
@@ -84,6 +98,12 @@ fun Navigator() {
     NavHost(navController = navController, startDestination = "MainPage") {
         composable("MainPage") { MainPage() }
         composable("AddPage") { AddPage() }
+        composable(
+            route = "ChangeImage/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.IntType })
+        ) {
+            ChangeImage(id = it.arguments?.getInt("id") ?: 0)
+        }
     }
 
 }
