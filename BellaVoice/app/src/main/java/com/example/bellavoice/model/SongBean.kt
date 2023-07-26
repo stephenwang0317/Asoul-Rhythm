@@ -8,8 +8,8 @@ data class SongBean @JvmOverloads constructor(
     @PrimaryKey(autoGenerate = true)
     val id: Int? = null,
     var uri: String = "",
-    val song: String = "", //歌名
-    val singer: String = "", //歌手名称
+    var song: String = "", //歌名
+    var singer: String = "", //歌手名称
     val duration: String = "", //时常
     val path: String = ""
 )
