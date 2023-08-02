@@ -29,10 +29,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -42,12 +44,14 @@ import com.example.bellavoice.R
 import com.example.bellavoice.model.SongBean
 import com.example.bellavoice.myutils.LocalNavController
 import com.example.bellavoice.viewmodel.SongsViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun MyDropdownMenu(
     expand: Boolean,
     onDismissRequest: () -> Unit,
-    onClick: () -> Unit
+    onClickEdit: () -> Unit,
+    onClickDelete: () -> Unit
 ) {
     DropdownMenu(
         expanded = expand,
@@ -56,7 +60,7 @@ fun MyDropdownMenu(
     ) {
         DropdownMenuItem(
             text = { Text("Edit") },
-            onClick = onClick,
+            onClick = onClickEdit,
             leadingIcon = {
                 Icon(
                     Icons.Outlined.Edit,
@@ -66,7 +70,7 @@ fun MyDropdownMenu(
         )
         DropdownMenuItem(
             text = { Text("Delete") },
-            onClick = { },
+            onClick = onClickDelete,
             leadingIcon = {
                 Icon(
                     Icons.Outlined.Delete,
@@ -86,6 +90,7 @@ fun VoiceCard2(
         mutableStateOf(false)
     }
     val navController = LocalNavController.current
+    val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
@@ -126,13 +131,14 @@ fun VoiceCard2(
                     fontSize = 18.sp,
                     modifier = Modifier.padding(bottom = 5.dp),
                     maxLines = 1,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    color = if (bean.exist) MaterialTheme.colorScheme.onPrimaryContainer
+                    else Color.LightGray,
                 )
                 Text(
-                    text = "贝拉Kira",
+                    text = bean.singer,
                     fontSize = 14.sp,
                     maxLines = 1,
-                    color = MaterialTheme.colorScheme.inversePrimary
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
             Icon(
@@ -156,7 +162,8 @@ fun VoiceCard2(
                 MyDropdownMenu(
                     expand = expand,
                     onDismissRequest = { expand = false },
-                    onClick = { navController.navigate("ChangeImage/" + bean.id) }
+                    onClickEdit = { navController.navigate("ChangeImage/" + bean.id) },
+                    onClickDelete = { coroutineScope.launch{ vm.delete(bean) } }
                 )
             }
         }
