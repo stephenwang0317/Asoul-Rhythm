@@ -50,7 +50,6 @@ class SongsViewModel(context: Context) : ViewModel() {
 
         } else {
             this.targetSong.clear()
-            Log.d("==============", mData.size.toString())
             this.targetSong.addAll(mData)
         }
     }
@@ -76,15 +75,19 @@ class SongsViewModel(context: Context) : ViewModel() {
     }
 
     fun playMusic(bean: SongBean) {
-        mediaPlayer.apply {
-            stop()
-            reset()
-            setDataSource(bean.path)
-            setOnCompletionListener {
-                nextSong()
+        try {
+            mediaPlayer.apply {
+                stop()
+                reset()
+                setDataSource(bean.path)
+                setOnCompletionListener {
+                    nextSong()
+                }
+                prepare()
+                start()
             }
-            prepare()
-            start()
+        } catch (e: Exception) {
+            Log.d("===========playMusic", e.stackTrace.toString())
         }
         _currentSongId = bean.id ?: 0
         isPlaying = true
@@ -161,12 +164,10 @@ class SongsViewModel(context: Context) : ViewModel() {
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).absolutePath
         path = path + File.separator + "SongsManager"
         val baseFile = File(path)
-//        var id = 0
         if (baseFile.isDirectory) {
             Log.e("listFiles.size", baseFile.listFiles()?.size.toString())
             for (file in baseFile.listFiles()!!) {
                 if (songsRepository.checkIfExist(file.path) == 1) {
-                    Log.e("checkIfExist", "Exist")
                     continue
                 } else {
                     val item = SongBean(
@@ -175,11 +176,22 @@ class SongsViewModel(context: Context) : ViewModel() {
                         path = file.path,
                     )
                     songsRepository.addSong(item)
-                    Log.e("checkIfExist", "Not Exist")
                 }
             }
         }
 
+        val beans = songsState.value.songs
+        for (item in beans) {
+            val tempFile = File(item.path)
+            if (tempFile.exists()) {
+                continue
+            } else {
+                item.exist = false
+                songsRepository.upsertSong(item)
+            }
+        }
+//        bug未修复
+//        getAllBySelectOrder(0)
         isRefreshing = false
     }
 
@@ -210,7 +222,11 @@ class SongsViewModel(context: Context) : ViewModel() {
         songsRepository.upsertSong(songBean)
     }
 
-    suspend fun getSingleSong(id:Int):SongBean {
+    suspend fun delete(songBean: SongBean) {
+        songsRepository.deleteSong(songBean)
+    }
+
+    suspend fun getSingleSong(id: Int): SongBean {
         return songsRepository.getSongById(id)
     }
 }
