@@ -27,7 +27,6 @@ import com.example.bellavoice.R
 import com.example.bellavoice.myutils.LocalNavController
 import com.example.bellavoice.myutils.LocalSongsViewModel
 import com.example.bellavoice.myutils.LocalThemeViewModel
-import com.example.bellavoice.viewmodel.SongsViewModel
 import com.example.bellavoice.viewmodel.ThemeViewModel
 import kotlinx.coroutines.launch
 
@@ -102,7 +101,7 @@ fun MyTopBar() {
                 },
             ) {
                 if (songVM.isRefreshing) {
-                    CircularProgressIndicator()
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.onPrimary)
                 } else {
                     Image(
                         imageVector = Icons.Default.Refresh,
