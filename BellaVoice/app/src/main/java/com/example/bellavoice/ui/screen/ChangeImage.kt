@@ -1,22 +1,30 @@
 package com.example.bellavoice.ui.screen
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.InputChip
+import androidx.compose.material3.InputChipDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -26,6 +34,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -44,6 +53,10 @@ import com.example.bellavoice.model.SongBean
 import com.example.bellavoice.myutils.LocalDownloadViewModel
 import com.example.bellavoice.myutils.LocalNavController
 import com.example.bellavoice.myutils.LocalSongsViewModel
+import com.example.bellavoice.ui.theme.ava.ava_theme_light_primaryContainer
+import com.example.bellavoice.ui.theme.bella.bella_theme_light_primaryContainer
+import com.example.bellavoice.ui.theme.diana.diana_theme_light_primaryContainer
+import com.example.bellavoice.ui.theme.elieen.elieen_theme_light_primaryContainer
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -74,10 +87,24 @@ fun ChangeImage(
         mutableStateOf(false)
     }
 
+    val nameChosen = remember {
+        mutableStateListOf(false, false, false, false)
+    }
+    val nameList = arrayListOf("向晚AvA", "贝拉Bella", "嘉然Diana", "乃琳Eileen")
+
     LaunchedEffect(Unit) {
         bean = songVM.getSingleSong(id)
         songName = bean.song
         imgUrl = bean.uri
+        val name = bean.singer.split(", ")
+        for (a in name) {
+            for (index in 0 until nameList.size) {
+                if (a == nameList[index]) {
+                    nameChosen[index] = true
+                    break
+                }
+            }
+        }
     }
 
 
@@ -123,15 +150,18 @@ fun ChangeImage(
             modifier = Modifier.padding(it),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            MainPageTitle(title = "修改封面")
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
+                Text(text = "修改封面", modifier = Modifier.padding(10.dp), fontSize = 20.sp)
+            }
             Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(bottom = 5.dp)
+                horizontalArrangement = Arrangement.Start,
+                modifier = Modifier
+                    .padding(bottom = 5.dp, start = 10.dp)
+                    .fillMaxWidth()
             ) {
-                Spacer(modifier = Modifier.fillMaxWidth(0.1f))
                 TextField(
                     value = bv,
-                    onValueChange = { bv = it },
+                    onValueChange = { str -> bv = str },
                     leadingIcon = {
                         Image(imageVector = Icons.Default.Image, contentDescription = null)
                     },
@@ -162,6 +192,7 @@ fun ChangeImage(
                 placeholder = painterResource(id = R.drawable.album_default),
                 error = painterResource(id = R.drawable.album_default),
                 modifier = Modifier
+                    .padding(horizontal = 10.dp)
                     .aspectRatio(1.6f)
                     .clip(
                         RoundedCornerShape(10)
@@ -173,14 +204,25 @@ fun ChangeImage(
                     ),
                 contentScale = ContentScale.Crop
             )
+            Divider(modifier = Modifier.padding(vertical = 5.dp), thickness = 2.dp)
             EditTextField(
                 str = songName,
                 label = "名字",
-                onChange = { songName = it; songNameChanged = true },
+                onChange = { str ->
+                    songName = str
+                    songNameChanged = true
+                },
                 onClose = { songName = ""; songNameChanged = true },
             )
+            Divider(modifier = Modifier.padding(vertical = 5.dp), thickness = 2.dp)
 
-            Row() {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
+                Text(text = "演唱者", modifier = Modifier.padding(10.dp), fontSize = 20.sp)
+
+            }
+            NameChip(nameChosen)
+
+            Row {
                 TextButton(
                     onClick = { navController.popBackStack() }
                 ) {
@@ -191,7 +233,23 @@ fun ChangeImage(
                         coroutineScope.launch {
                             if (imgUrlChanged) bean.uri = imgUrl
                             if (songNameChanged) bean.song = songName
+                            val name: StringBuilder = StringBuilder()
+                            for (index in 0..3) {
+                                val b = nameChosen[index]
+                                Log.e("============", "$index, $b")
+                                if (b) {
+                                    when (index) {
+                                        0 -> name.append("向晚AvA, ")
+                                        1 -> name.append("贝拉Bella, ")
+                                        2 -> name.append("嘉然Diana, ")
+                                        else -> name.append("乃琳Eileen")
+                                    }
+                                }
+                            }
+                            Log.e("================", name.toString())
+                            bean.singer = name.toString()
                             songVM.upsert(bean)
+                            navController.popBackStack()
                         }
                     }
                 ) {
@@ -227,4 +285,39 @@ fun EditTextField(
             Text(text = label)
         }
     )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun NameChip(
+    mutableList: MutableList<Boolean>
+) {
+    val nameList = arrayListOf("向晚AvA", "贝拉Bella", "嘉然Diana", "乃琳Eileen")
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
+            repeat(4) { index ->
+                InputChip(
+                    selected = mutableList[index],
+                    onClick = { mutableList[index] = !mutableList[index] },
+                    label = { Text(nameList[index]) },
+                    avatar = {
+                        Icon(
+                            Icons.Filled.Person,
+                            contentDescription = null,
+                            Modifier.size(InputChipDefaults.AvatarSize)
+                        )
+                    },
+                    colors = InputChipDefaults.inputChipColors(
+                        selectedContainerColor = when (index) {
+                            0 -> ava_theme_light_primaryContainer
+                            1 -> bella_theme_light_primaryContainer
+                            2 -> diana_theme_light_primaryContainer
+                            else -> elieen_theme_light_primaryContainer
+                        }
+                    ),
+                    modifier = Modifier.padding(start = 10.dp)
+                )
+            }
+        }
+    }
 }
