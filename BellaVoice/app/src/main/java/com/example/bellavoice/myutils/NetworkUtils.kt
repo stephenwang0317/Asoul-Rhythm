@@ -1,11 +1,10 @@
 package com.example.bellavoice.myutils
 
-import com.google.common.annotations.VisibleForTesting
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
-@VisibleForTesting
-internal fun ShortUrltoLong(shortUrl: String): String {
+
+fun ShortUrltoLong(shortUrl: String): String {
     val okHttpClient = OkHttpClient().newBuilder().followRedirects(false).build()
     val request = Request.Builder()
         .url(shortUrl)
