@@ -19,7 +19,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Sort
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -47,7 +46,6 @@ import com.example.bellavoice.viewmodel.SongsViewModel
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview(showBackground = true)
 fun MainPage(
@@ -96,7 +94,7 @@ fun MainPageContent(
             }
 
             item { PlayListTitle(songsViewModel = songsViewModel) }
-            itemsIndexed(songList) { index, bean ->
+            itemsIndexed(songList) { _, bean ->
                 VoiceCard2(
                     bean = bean,
                     vm = songsViewModel
