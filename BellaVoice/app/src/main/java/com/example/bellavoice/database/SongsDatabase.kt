@@ -8,7 +8,7 @@ import com.example.bellavoice.model.SongBean
 
 @Database(
     entities = [SongBean::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class SongsDatabase : RoomDatabase() {
