@@ -9,11 +9,13 @@ import com.example.bellavoice.database.SongsDatabase
 import com.example.bellavoice.database.SongsRepository
 import com.example.bellavoice.model.SongBean
 import com.example.bellavoice.viewmodel.DownloadViewModel
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 
 class MyBroadcastReceiver(private val downloadViewModel: DownloadViewModel) : BroadcastReceiver() {
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onReceive(context: Context?, intent: Intent?) {
         when (intent?.action) {
             DownloadManager.ACTION_DOWNLOAD_COMPLETE -> {
