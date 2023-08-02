@@ -10,6 +10,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -21,6 +22,7 @@ import com.example.bellavoice.myutils.LocalNavController
 import com.example.bellavoice.myutils.LocalSongsViewModel
 import com.example.bellavoice.myutils.LocalThemeViewModel
 import com.example.bellavoice.myutils.MyBroadcastReceiver
+import com.example.bellavoice.myutils.ShortUrltoLong
 import com.example.bellavoice.ui.screen.AddPage
 import com.example.bellavoice.ui.screen.ChangeImage
 import com.example.bellavoice.ui.screen.MainPage
@@ -28,6 +30,9 @@ import com.example.bellavoice.ui.theme.BellaVoiceTheme2
 import com.example.bellavoice.viewmodel.DownloadViewModel
 import com.example.bellavoice.viewmodel.SongsViewModel
 import com.example.bellavoice.viewmodel.ThemeViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class MainActivity : ComponentActivity() {
@@ -65,14 +70,25 @@ class MainActivity : ComponentActivity() {
     private fun processExtraData() {
         intent.let { it ->
             it.clipData.let { cd ->
+                val regex = Regex("https://[a-zA-Z0-9./?=_-]+")
                 Log.d("==========", cd.toString())
-                val navController = this.navController.let {
-                    it?.navigate("AddPage")
+                val matches = regex.findAll(cd.toString())
+                // 遍历并打印匹配的链接
+                for (match in matches) {
+                    val url = match.value
+                    Log.d("===============", "提取到的HTTPS链接：$url")
+
+                    lifecycleScope.launch {
+                        val longUrl = withContext(Dispatchers.IO) { ShortUrltoLong(url) }
+                        Log.d("===============", "解析到的HTTPS链接：$longUrl")
+                        downloadViewModel.bv = longUrl
+                        navController?.navigate("AddPage")
+                    }
+
+                    break
                 }
-//                downloadViewModel.bv =
             }
         }
-
     }
 
     override fun onResume() {
@@ -105,5 +121,4 @@ fun Navigator() {
             ChangeImage(id = it.arguments?.getInt("id") ?: 0)
         }
     }
-
 }
