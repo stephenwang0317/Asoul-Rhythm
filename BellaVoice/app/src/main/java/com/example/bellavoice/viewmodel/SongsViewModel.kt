@@ -14,6 +14,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.bellavoice.database.SongsDatabase
 import com.example.bellavoice.database.SongsRepository
 import com.example.bellavoice.model.SongBean
+import com.example.bellavoice.myutils.NotificationUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -43,6 +44,7 @@ class SongsViewModel(context: Context) : ViewModel() {
         viewModelScope.launch {
             getAllById()
         }
+//        notificationUtils.showMyNotification(context, mediaPlayer)
     }
 
     fun searchSong(targetSong: String = "") {
@@ -190,9 +192,10 @@ class SongsViewModel(context: Context) : ViewModel() {
                 songsRepository.upsertSong(item)
             }
         }
-//        bug未修复
-//        getAllBySelectOrder(0)
         isRefreshing = false
+//        bug未修复
+        getAllBySelectOrder(0)
+
     }
 
     private suspend fun getAllBySelectOrder(type: Int) {
@@ -204,6 +207,7 @@ class SongsViewModel(context: Context) : ViewModel() {
         combine(flow) { flowArr ->
             SongsViewState(flowArr[0])
         }.collect { _songsState.value = it }
+        return
     }
 
     suspend fun getAllById() {
