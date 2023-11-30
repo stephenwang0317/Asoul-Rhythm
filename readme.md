@@ -46,6 +46,22 @@
 
 
 
+***部分UI如下：***
+
+<table>
+    <tr><center><p>点击头部的四个Q版小人切换对应应援色主题</p></center></tr>
+<tr>
+<td ><center><img src="./doc/1.jpg" >首页（拉姐主题色） </center></td>
+<td ><center><img src="./doc/2.jpg">首页（晚晚主题色）</center></td>
+</tr>
+<tr>
+<td><center><img src="./doc/4.jpg"  >根据BV号下载界面</center></td>
+<td ><center><img src="./doc/3.jpg"  >修改信息界面</center> </td>
+</tr>
+</table>
+
+
+
 TODO：
 
 - [x] 使用Room持久化存储歌曲信息
