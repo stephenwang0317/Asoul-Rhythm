@@ -1,4 +1,4 @@
-package com.example.homework.network
+package com.example.bellavoice.network
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -7,7 +7,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 
 object Network {
     private const val baseUrl =
-        "http://8.130.106.215:54321/"
+        "http://20.255.62.133:54321/"
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(baseUrl)
